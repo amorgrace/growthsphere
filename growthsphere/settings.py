@@ -26,7 +26,13 @@ SECRET_KEY = 'django-insecure-umv=7@s^#bbzgn+h5d5f2%fee$#=ek(7r%5s!@lay=$9ezou5l
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+CORS_ALLOWED_ORIGINS = [
+    "https://growth-one-phi.vercel.app/",
+]
+
+
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'growthsphere.onrender.com', 'www.growthsphere.onrender.com']
+
 
 
 # Application definition
@@ -56,6 +62,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'corsheaders',
 ]
 
 AUTH_USER_MODEL = 'apiconf.CustomUser'
@@ -96,6 +103,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'growthsphere.urls'
