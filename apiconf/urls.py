@@ -4,6 +4,7 @@ from dj_rest_auth.views import LogoutView
 
 from apiconf.views import UserFinancesView, CustomLoginView, CustomUserDetailsView
 
+
 urlpatterns = [
     path('register/', RegisterView.as_view(), name='register'),
     path('login/', CustomLoginView.as_view(), name='login'),

@@ -17,6 +17,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include, re_path
 from .swagger import schema_view
+from django.http import JsonResponse
+
+def health_check(request):
+    return JsonResponse({'status': 'ok'}, status=200)
 
 
 urlpatterns = [
@@ -27,4 +31,6 @@ urlpatterns = [
     re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path('health/', health_check, name='health-check'),
+
 ]
