@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser, Finances
+from .models import CustomUser, Finances, RecentTransaction
 from dj_rest_auth.serializers import UserDetailsSerializer
 
 
@@ -45,4 +45,27 @@ class CustomUserDetailsSerializer(UserDetailsSerializer):
             'risk_tolerance',
             'account_type',
             'choose_trades',
+            'kyc_status',
+            'kyc_photo',
+            'doc_type'
         ]
+
+class RecentTransactionSerializer(serializers.ModelSerializer):
+    time_since_created = serializers.SerializerMethodField()
+
+    class Meta:
+        model = RecentTransaction
+        fields = [
+            'id',
+            'transaction_id',
+            'crypto_type',
+            'transaction_type',
+            'transaction_status',
+            'amount',
+            'created_at',
+            'time_since_created',
+        ]
+        read_only_fields = ['transaction_id', 'created_at', 'time_since_created']
+
+    def get_time_since_created(self, obj):
+        return obj.time_since_created()

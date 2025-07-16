@@ -2,13 +2,13 @@ from rest_framework import generics
 from rest_framework.generics import RetrieveAPIView, ListAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .serializers import RegisterSerializers, FinancesSerializers
-from .models import Finances
+from .models import Finances, RecentTransaction
 from rest_framework.response import Response
 from dj_rest_auth.views import LoginView as DjRestLoginView
 from rest_framework import status
 from dj_rest_auth.serializers import JWTSerializer
 from dj_rest_auth.utils import jwt_encode
-from .serializers import CustomUserDetailsSerializer
+from .serializers import CustomUserDetailsSerializer, RecentTransactionSerializer
 
 
 class RegisterView(generics.CreateAPIView):
@@ -49,3 +49,10 @@ class CustomUserDetailsView(RetrieveAPIView):
 
     def get_object(self):
         return self.request.user
+    
+class UserTransactionListView(ListAPIView):
+    serializer_class = RecentTransactionSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return RecentTransaction.objects.filter(user=self.request.user).order_by('-created_at')

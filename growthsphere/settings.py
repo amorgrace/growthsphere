@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-umv=7@s^#bbzgn+h5d5f2%fee$#=ek(7r%5s!@lay=$9ezou5l
 DEBUG = True
 
 CORS_ALLOWED_ORIGINS = [
-    "https://growth-one-phi.vercel.app/",
+    "https://growth-one-phi.vercel.app",
     "http://127.0.0.1:5173",
     "http://localhost:5173",
 ]
