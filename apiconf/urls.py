@@ -2,7 +2,7 @@ from django.urls import path
 from .views import RegisterView
 from dj_rest_auth.views import LogoutView
 
-from apiconf.views import UserFinancesView, CustomLoginView, CustomUserDetailsView, UserTransactionListView
+from apiconf.views import UserFinancesView, CustomLoginView, CustomUserDetailsView, UserTransactionListView, ChangePasswordView
 
 
 urlpatterns = [
@@ -12,4 +12,5 @@ urlpatterns = [
     path('user/', CustomUserDetailsView.as_view(), name='user'),
     path('user/finances/', UserFinancesView.as_view(), name='user-finances'),
     path('user/transactions/', UserTransactionListView.as_view(), name='user-transactions'),
+    path('change-password/', ChangePasswordView.as_view(), name='change-password'),
 ]

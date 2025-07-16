@@ -18,9 +18,16 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from .swagger import schema_view
 from django.http import JsonResponse
+from django.contrib.auth import get_user_model
+
 
 def health_check(request):
-    return JsonResponse({'status': 'ok'}, status=200)
+    try:
+        user = get_user_model()
+        user.objects.exists()
+        return JsonResponse({'message': 'Db is responsive'}, status=200)
+    except Exception:
+        return JsonResponse({'message': 'Db is fucked!'}, status=503)
 
 
 urlpatterns = [
