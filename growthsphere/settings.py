@@ -34,7 +34,7 @@ CORS_ALLOWED_ORIGINS = [
 
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'growthsphere.onrender.com', 'www.growthsphere.onrender.com']
-CORS_ALLOWED_CREDENTIALS = True
+CORS_ALLOW_CREDENTIALS = True
 
 
 # Application definition
