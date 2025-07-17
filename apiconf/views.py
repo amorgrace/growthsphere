@@ -56,7 +56,7 @@ class UserTransactionListView(ListAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return RecentTransaction.objects.filter(user=self.request.user).order_by('-created_at')
+        return RecentTransaction.objects.filter(user=self.request.user).order_by('-date')
     
 
 class ChangePasswordView(APIView):

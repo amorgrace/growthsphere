@@ -58,14 +58,14 @@ class RecentTransactionSerializer(serializers.ModelSerializer):
         fields = [
             'id',
             'transaction_id',
-            'crypto_type',
-            'transaction_type',
-            'transaction_status',
+            'network',
+            'type',
+            'status',
             'amount',
-            'created_at',
+            'date',
             'time_since_created',
         ]
-        read_only_fields = ['transaction_id', 'created_at', 'time_since_created']
+        read_only_fields = ['transaction_id', 'date', 'time_since_created']
 
     def get_time_since_created(self, obj):
         return obj.time_since_created()

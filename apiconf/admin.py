@@ -57,11 +57,11 @@ class FinancesAdmin(admin.ModelAdmin):
 @admin.register(RecentTransaction)
 class RecentTransactionAdmin(admin.ModelAdmin):
     list_display = (
-        'user_email', 'crypto_type', 'transaction_type',
-        'transaction_status', 'amount', 'created_at', 'time_since_created'
+        'user_email', 'network', 'type', 'currency',
+        'status', 'amount', 'date', 'time_since_created'
     )
     search_fields = ('user__email', 'transaction_id')
-    list_filter = ('crypto_type', 'transaction_type', 'transaction_status',)
+    list_filter = ('network', 'type', 'status',)
 
     def user_email(self, obj):
         return obj.user.email

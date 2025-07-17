@@ -141,12 +141,20 @@ class Finances(models.Model):
 
 
 class RecentTransaction(models.Model):
-    CRYPTO_CHOICES = [
-        ('BTC', 'Bitcoin'),
-        ('ETH', 'Ethereum'),
-        ('BSC', 'Binance Smart Chain'),
-        ('AVAX', 'Avalanche'),
-        ('MATIC', 'Polygon'),
+    NETWORK_CHOICES = [
+        ('bitcoin', 'Bitcoin'),
+        ('ethereum', 'Ethereum'),
+        ('solana', 'Solana'),
+        ('tron', 'TRC'),
+        ('cardono', 'Cardono'),
+    ]
+
+    CURRENCY_CHOICES = [
+        ('btc', 'BTC'),
+        ('eth', 'ETH'),
+        ('sol', 'SOL'),
+        ('trc20', 'TRC20'),
+        ('crd', 'CRD'),
     ]
 
 
@@ -163,15 +171,16 @@ class RecentTransaction(models.Model):
 
     transaction_id = models.CharField(max_length=100, unique=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='transactions')
-    crypto_type = models.CharField(max_length=10, choices=CRYPTO_CHOICES)
-    transaction_type = models.CharField(max_length=10, choices=TYPE_CHOICES)
-    transaction_status = models.CharField(max_length=10, choices=STATUS_CHOICES)
+    network = models.CharField(max_length=10, choices=NETWORK_CHOICES, default='bitcoin')
+    currency = models.CharField(max_length=10, choices=CURRENCY_CHOICES, default='btc')
+    type = models.CharField(max_length=10, choices=TYPE_CHOICES, default='deposit')
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     amount = models.DecimalField(max_digits=18, decimal_places=8)
-    created_at = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.user.email} - {self.crypto_type} - {self.transaction_type}"
+        return f"{self.user.email} - {self.network} - {self.type} - {self.amount}"
 
     def time_since_created(self):
         from django.utils.timesince import timesince
-        return timesince(self.created_at) + " ago"
+        return timesince(self.date) + " ago"
