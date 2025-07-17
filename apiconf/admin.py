@@ -1,19 +1,29 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from unfold.admin import ModelAdmin, TabularInline
 from .models import CustomUser, Finances, RecentTransaction
 
-class FinancesInline(admin.TabularInline):
+
+class FinancesInline(TabularInline):
     model = Finances
     extra = 0
     readonly_fields = ('total_balance',)
     can_delete = False
+    show_change_link = True
+
 
 @admin.register(CustomUser)
-class CustomUserAdmin(BaseUserAdmin):
-    list_display = ('email', 'first_name', 'last_name', 'account_type', 'kyc_status')
+class CustomUserAdmin(BaseUserAdmin, ModelAdmin):
+    list_display = (
+        'email', 'first_name', 'last_name',
+        'account_type', 'kyc_status'
+    )
+    list_display_links = ('email', 'first_name', 'last_name')
     list_filter = ('account_type', 'risk_tolerance', 'kyc_status')
     search_fields = ('email', 'first_name', 'last_name', 'phone_number')
     ordering = ('email',)
+    list_per_page = 25
+    list_max_show_all = 100
 
     fieldsets = (
         ("Login Info", {
@@ -23,7 +33,10 @@ class CustomUserAdmin(BaseUserAdmin):
             'fields': ('first_name', 'last_name', 'phone_number')
         }),
         ("Investment Details", {
-            'fields': ('investment_goal', 'risk_tolerance', 'account_type', 'choose_trades')
+            'fields': (
+                'investment_goal', 'risk_tolerance',
+                'account_type', 'choose_trades'
+            )
         }),
         ("KYC Details", {
             'fields': ('kyc_status', 'doc_type', 'kyc_photo')
@@ -37,13 +50,25 @@ class CustomUserAdmin(BaseUserAdmin):
         }),
     )
 
+    exclude = (
+        'is_staff', 'is_active', 'is_superuser',
+        'groups', 'user_permissions', 'last_login', 'date_joined'
+    )
+
     inlines = [FinancesInline]
 
+
 @admin.register(Finances)
-class FinancesAdmin(admin.ModelAdmin):
-    list_display = ('user_email', 'total_deposit', 'total_profit', 'total_balance_display')
+class FinancesAdmin(ModelAdmin):
+    list_display = (
+        'user_email', 'total_deposit',
+        'total_profit', 'total_balance_display'
+    )
+    list_display_links = ('user_email',)
     search_fields = ('user__email',)
     list_filter = ('user__account_type',)
+    list_per_page = 25
+    list_max_show_all = 100
 
     def user_email(self, obj):
         return obj.user.email
@@ -55,13 +80,16 @@ class FinancesAdmin(admin.ModelAdmin):
 
 
 @admin.register(RecentTransaction)
-class RecentTransactionAdmin(admin.ModelAdmin):
+class RecentTransactionAdmin(ModelAdmin):
     list_display = (
-        'user_email', 'network', 'type', 'currency',
+        'user_email','transaction_id', 'network', 'type', 'currency',
         'status', 'amount', 'date', 'time_since_created'
     )
+    list_display_links = ('user_email', 'transaction_id')
     search_fields = ('user__email', 'transaction_id')
-    list_filter = ('network', 'type', 'status',)
+    list_filter = ('network', 'type', 'status')
+    list_per_page = 25
+    list_max_show_all = 100
 
     def user_email(self, obj):
         return obj.user.email

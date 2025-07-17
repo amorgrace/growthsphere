@@ -50,6 +50,7 @@ REST_AUTH_SERIALIZERS = {
 }
 
 INSTALLED_APPS = [
+    'unfold',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -66,6 +67,14 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
 ]
+
+UNFOLD = {
+    "SITE_HEADER": "GrowthSphere Admin",
+    "SITE_TITLE": "GrowthSphere",
+    "SHOW_HISTORY": True,
+    "SHOW_RECENT": True,
+}
+
 
 AUTH_USER_MODEL = 'apiconf.CustomUser'
 
