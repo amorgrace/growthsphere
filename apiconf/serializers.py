@@ -60,6 +60,7 @@ class RecentTransactionSerializer(serializers.ModelSerializer):
             'transaction_id',
             'network',
             'type',
+            'currency',
             'status',
             'amount',
             'date',
