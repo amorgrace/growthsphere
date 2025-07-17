@@ -66,7 +66,16 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
+    'cloudinary',
+    'cloudinary_storage',
 ]
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dunqe09gc',
+    'API_KEY': '143554361553155',
+    'API_SECRET': '7sG7_JThaOjSTJOLGmdWpeQI6FQ',
+}
+
 
 UNFOLD = {
     "SITE_HEADER": "GrowthSphere Admin",

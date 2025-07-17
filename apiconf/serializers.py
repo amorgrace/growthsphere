@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import CustomUser, Finances, RecentTransaction
+from .models import CustomUser, Finances, RecentTransaction, KYC
 from dj_rest_auth.serializers import UserDetailsSerializer
 
 
@@ -45,9 +45,6 @@ class CustomUserDetailsSerializer(UserDetailsSerializer):
             'risk_tolerance',
             'account_type',
             'choose_trades',
-            'kyc_status',
-            'kyc_photo',
-            'doc_type'
         ]
 
 class RecentTransactionSerializer(serializers.ModelSerializer):
@@ -75,3 +72,8 @@ class ChangePasswordSerializer(serializers.Serializer):
     current_password = serializers.CharField(required=True)
     new_password = serializers.CharField(required=True)
     confirm_password = serializers.CharField(required=True)
+
+class KYCSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = KYC
+        fields = '__all__'

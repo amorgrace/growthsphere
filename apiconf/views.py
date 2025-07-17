@@ -1,7 +1,7 @@
 from rest_framework import generics
 from rest_framework.generics import RetrieveAPIView, ListAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from .serializers import RegisterSerializers, FinancesSerializers
+from .serializers import RegisterSerializers, FinancesSerializers, KYCSerializer
 from .models import Finances, RecentTransaction
 from rest_framework.response import Response
 from dj_rest_auth.views import LoginView as DjRestLoginView, APIView
@@ -10,6 +10,7 @@ from dj_rest_auth.serializers import JWTSerializer
 from drf_yasg.utils import swagger_auto_schema
 from dj_rest_auth.utils import jwt_encode
 from .serializers import CustomUserDetailsSerializer, RecentTransactionSerializer, ChangePasswordSerializer
+from rest_framework.parsers import MultiPartParser, FormParser
 
 
 class RegisterView(generics.CreateAPIView):
@@ -81,3 +82,12 @@ class ChangePasswordView(APIView):
         user.save()
 
         return Response({'detail': 'Password updated successfully.'}, status=status.HTTP_200_OK)
+    
+
+class KYCUploadView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+
+    def post(self, request):
+        serializer = KYCSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)

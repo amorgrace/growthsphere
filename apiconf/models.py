@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+from cloudinary.models import CloudinaryField
+
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -95,33 +97,6 @@ class CustomUser(AbstractUser):
         choices=CHOOSE_TRADES_CHOICES,
     )
 
-    
-    KYC_STATUS_CHOICES = [
-        ('pending', 'Pending'),
-        ('in_review', 'In Review'),
-        ('approved', 'Approved'),
-        ('rejected', 'Rejected'),
-    ]
-
-    kyc_status = models.CharField(
-        max_length=20,
-        choices=KYC_STATUS_CHOICES,
-        default='pending'
-    )
-
-    DOCUMENT_TYPE_CHOICES = [
-        ('passport', 'Passport'),
-        ('drivers_license', "Driver's license"),
-        ('national_id', 'National ID'),
-    ]
-
-    kyc_photo = models.ImageField(upload_to='kyc_photos/', null=True, blank=True)
-    doc_type = models.CharField(
-        max_length=20,
-        choices=DOCUMENT_TYPE_CHOICES,
-        default='passport'
-    )
-
     def __str__(self):
         return self.email
 
@@ -184,3 +159,32 @@ class RecentTransaction(models.Model):
     def time_since_created(self):
         from django.utils.timesince import timesince
         return timesince(self.date) + " ago"
+    
+class KYC(models.Model):
+
+    DOCUMENT_TYPE_CHOICES = [
+        ('passport', 'Passport'),
+        ('drivers_license', "Driver's license"),
+        ('national_id', 'National ID'),
+    ]
+
+    KYC_STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('in_review', 'In Review'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ]
+
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    id_type = models.CharField(
+        max_length=20,
+        choices=DOCUMENT_TYPE_CHOICES,
+        default='passport'
+    )
+    id_front = CloudinaryField('image', blank=True, null=True)
+    id_back = CloudinaryField('image', blank=True, null=True)
+    status = models.CharField(
+        max_length=20,
+        choices=KYC_STATUS_CHOICES,
+        default='pending'
+    )
