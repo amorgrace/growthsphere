@@ -91,3 +91,5 @@ class KYCUploadView(APIView):
         serializer = KYCSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(user=request.user)
+
+        return Response({'detail': 'KYC submitted successfully.'}, status=status.HTTP_200_OK)
