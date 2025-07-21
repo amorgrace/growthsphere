@@ -2,7 +2,7 @@ from rest_framework import generics
 from rest_framework.generics import RetrieveAPIView, ListAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .serializers import RegisterSerializers, FinancesSerializers, KYCSerializer
-from .models import Finances, RecentTransaction
+from .models import Finances, RecentTransaction, KYC
 from rest_framework.response import Response
 from dj_rest_auth.views import LoginView as DjRestLoginView, APIView
 from rest_framework import status
@@ -11,7 +11,6 @@ from drf_yasg.utils import swagger_auto_schema
 from dj_rest_auth.utils import jwt_encode
 from .serializers import CustomUserDetailsSerializer, RecentTransactionSerializer, ChangePasswordSerializer
 from rest_framework.parsers import MultiPartParser, FormParser
-
 
 class RegisterView(generics.CreateAPIView):
     serializer_class = RegisterSerializers
@@ -86,10 +85,39 @@ class ChangePasswordView(APIView):
 
 class KYCUploadView(APIView):
     parser_classes = (MultiPartParser, FormParser)
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        kyc_instance = KYC.objects.filter(user=request.user).first()
+        if not kyc_instance:
+            return Response({'detail': 'No KYC submitted yet.', 'status': 'pending'}, status=status.HTTP_404_NOT_FOUND)
+        
+        serializer = KYCSerializer(kyc_instance)
+        return Response({
+            'kyc_data': serializer.data,
+            'status': kyc_instance.status,
+            'message': f'KYC status is "{kyc_instance.status}".'
+        }, status=status.HTTP_200_OK)
 
     def post(self, request):
-        serializer = KYCSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(user=request.user)
+        kyc_instance = KYC.objects.filter(user=request.user).first()
 
-        return Response({'detail': 'KYC submitted successfully.'}, status=status.HTTP_200_OK)
+        serializer = KYCSerializer(data=request.data, instance=kyc_instance)
+        if serializer.is_valid():
+            kyc = serializer.save(user=request.user)
+
+            if kyc.status == "pending":
+                kyc.status = "in_review"
+                kyc.save()
+                message = 'KYC submitted successfully and is now under review.'
+            elif kyc.status == "approved":
+                message = 'KYC already approved. No further action required.'
+            elif kyc.status == "rejected":
+                message = 'KYC was rejected. Please contact support before resubmitting.'
+
+            return Response({
+                'detail': message,
+                'status': kyc.status
+            }, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
