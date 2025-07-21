@@ -76,4 +76,5 @@ class ChangePasswordSerializer(serializers.Serializer):
 class KYCSerializer(serializers.ModelSerializer):
     class Meta:
         model = KYC
-        fields = '__all__'
+        fields = ['user', 'id_type', 'id_front_url', 'id_back_url', 'kyc_status']
+        read_only_fields = ['user', 'kyc_status']

@@ -87,7 +87,7 @@ class RecentTransactionAdmin(ModelAdmin):
 
 @admin.register(KYC)
 class KYCAdmin(ModelAdmin):
-    list_display = ('user', 'id_type', 'status')
-    list_filter = ('status', 'id_type')
+    list_display = ('user', 'id_type', 'kyc_status')
+    list_filter = ('kyc_status', 'id_type')
     search_fields = ('user__email',)
     list_per_page = 25

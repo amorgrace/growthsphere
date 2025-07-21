@@ -181,9 +181,9 @@ class KYC(models.Model):
         choices=DOCUMENT_TYPE_CHOICES,
         default='passport'
     )
-    id_front = CloudinaryField('image', blank=True, null=True)
-    id_back = CloudinaryField('image', blank=True, null=True)
-    status = models.CharField(
+    id_front_url = models.URLField(blank=True, null=True)
+    id_back_url = models.URLField(blank=True, null=True)
+    kyc_status = models.CharField(
         max_length=20,
         choices=KYC_STATUS_CHOICES,
         default='pending'
