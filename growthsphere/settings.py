@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+from decouple import config, Csv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,20 +22,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-umv=7@s^#bbzgn+h5d5f2%fee$#=ek(7r%5s!@lay=$9ezou5l'
+SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config("DEBUG", default=False, cast=bool)
 
-CORS_ALLOWED_ORIGINS = [
-    "https://growth-one-phi.vercel.app",
-    "http://127.0.0.1:5173",
-    "http://localhost:5173",
-    "https://www.growthsph.com/",
-]
+CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", cast=Csv())
 
-
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'growthsphere.onrender.com', 'www.growthsphere.onrender.com']
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
 CORS_ALLOW_CREDENTIALS = True
 
 
@@ -72,9 +67,9 @@ INSTALLED_APPS = [
 ]
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'dunqe09gc',
-    'API_KEY': '143554361553155',
-    'API_SECRET': '7sG7_JThaOjSTJOLGmdWpeQI6FQ',
+    'CLOUD_NAME': config("CLOUD_NAME"),
+    'API_KEY': config("CLOUD_API_KEY"),
+    'API_SECRET': config("CLOUD_API_SECRET"),
 }
 
 

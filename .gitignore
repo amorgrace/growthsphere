@@ -1,0 +1,14 @@
+# Environment variables
+.env
+
+# Python
+*.pyc
+__pycache__/
+
+# Static and media
+/staticfiles/
+/media/
+
+# Virtualenv
+.venv/
+env/

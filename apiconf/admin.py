@@ -15,7 +15,7 @@ class KYCInline(TabularInline):
     extra = 0
     can_delete = False
     show_change_link = True
-    fields = ('id_type', 'id_front', 'id_back', 'status')
+    fields = ('id_type', 'id_front_url', 'id_back_url', 'kyc_status')
 
 @admin.register(CustomUser)
 class CustomUserAdmin(BaseUserAdmin, ModelAdmin):
