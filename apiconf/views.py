@@ -107,8 +107,8 @@ class KYCUploadView(APIView):
             kyc = serializer.save(user=request.user)
 
             if kyc.kyc_status == "pending":
-                kyc.kyc_status = "in_review"
-                kyc.save()
+                message = 'Submit KYC info.'
+            elif kyc.kyc_status == 'in_review':
                 message = 'KYC submitted successfully and is now under review.'
             elif kyc.kyc_status == "approved":
                 message = 'KYC already approved. No further action required.'
