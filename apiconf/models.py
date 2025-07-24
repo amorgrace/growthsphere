@@ -186,5 +186,5 @@ class KYC(models.Model):
     kyc_status = models.CharField(
         max_length=20,
         choices=KYC_STATUS_CHOICES,
-        default='pending'
+        default='in_review'
     )
