@@ -1,0 +1,8 @@
+Hi {{ user.email }},
+
+Please confirm your email by clicking the link below:
+
+{{ activate_url }}
+
+Kind regards,
+Growthsphere Support Team.

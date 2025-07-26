@@ -19,6 +19,12 @@ from django.urls import path, include, re_path
 from .swagger import schema_view
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
+from dj_rest_auth.jwt_auth import get_refresh_view
+from rest_framework_simplejwt.views import TokenVerifyView
+
+
+
+
 
 
 def health_check(request):
@@ -33,6 +39,14 @@ def health_check(request):
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/auth/', include('apiconf.urls')),
+
+    # Auth endpoints
+    path('api/auth/', include('dj_rest_auth.urls')),
+    path('api/auth/registration/', include('dj_rest_auth.registration.urls')),  # 🔥 email verification
+    path('api/auth/token/refresh/', get_refresh_view().as_view(), name='token_refresh'),
+    path('api/auth/token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+
+
 
     
     # Swagger UI

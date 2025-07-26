@@ -19,10 +19,10 @@ class KYCInline(TabularInline):
 
 @admin.register(CustomUser)
 class CustomUserAdmin(BaseUserAdmin, ModelAdmin):
-    list_display = ('email', 'first_name', 'last_name', 'account_type')
+    list_display = ('email', 'first_name', 'last_name', 'account_type', 'country')
     list_display_links = ('email', 'first_name', 'last_name')
-    list_filter = ('account_type', 'risk_tolerance')
-    search_fields = ('email', 'first_name', 'last_name', 'phone_number')
+    list_filter = ('account_type', 'risk_tolerance', 'country')
+    search_fields = ('email', 'first_name', 'last_name', 'phone_number', 'country')
     ordering = ('email',)
     list_per_page = 25
     list_max_show_all = 100

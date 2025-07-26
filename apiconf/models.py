@@ -35,9 +35,10 @@ class CustomUser(AbstractUser):
     last_name = models.CharField(max_length=20)
     email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=15)
+    country = models.CharField(max_length=50, default='')
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = [] #This means that only email and password required by default because i already set the above
+    REQUIRED_FIELDS = [] 
 
     objects = CustomUserManager()
 

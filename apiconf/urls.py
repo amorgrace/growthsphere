@@ -6,7 +6,7 @@ from apiconf.views import UserFinancesView, CustomLoginView, CustomUserDetailsVi
 
 
 urlpatterns = [
-    path('register/', RegisterView.as_view(), name='register'),
+    # path('register/', RegisterView.as_view(), name='register'),
     path('login/', CustomLoginView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='login'),
     path('user/', CustomUserDetailsView.as_view(), name='user'),

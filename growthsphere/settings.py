@@ -35,6 +35,16 @@ CORS_ALLOW_CREDENTIALS = True
 
 # Application definition
 REST_USE_JWT = True
+REST_AUTH_TOKEN_SERIALIZER = 'dj_rest_auth.serializers.JWTSerializer'
+
+REST_AUTH = {
+    'SIGNUP_FIELDS': {
+        'username': {'required': False},
+        'email': {'required': True},
+    },
+    'REGISTER_USERNAME_REQUIRED': False  # Explicitly disable username requirement
+}
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -42,7 +52,12 @@ REST_FRAMEWORK = {
 }
 
 REST_AUTH_SERIALIZERS = {
-    'USER_DETAILS_SERIALIZER': 'apiconf.serializers.CustomUserDetailsSerializer'
+    'USER_DETAILS_SERIALIZER': 'apiconf.serializers.CustomUserDetailsSerializer',
+    
+}
+
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'apiconf.serializers.CustomRegisterSerializer',
 }
 
 INSTALLED_APPS = [
@@ -54,6 +69,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'django.contrib.sites',
     'apiconf',
     'rest_framework',
     'dj_rest_auth',
@@ -64,7 +80,14 @@ INSTALLED_APPS = [
     'corsheaders',
     'cloudinary',
     'cloudinary_storage',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'dj_rest_auth.registration',
 ]
+
+
+SITE_ID = 1
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': config("CLOUD_NAME"),
@@ -104,10 +127,20 @@ SWAGGER_SETTINGS = {
 
 
 # Disable username requirements
+# Allauth config
+# Allauth config
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_LOGIN_METHODS = ['email']
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.zoho.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'info@growthsph.com'  # Replace with your Zoho email
+EMAIL_HOST_PASSWORD = 'uYDzbENmVHSa'  # Use Zoho's App Password
+DEFAULT_FROM_EMAIL = 'Growthsphere <info@growthsph.com>'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -120,6 +153,7 @@ MIDDLEWARE = [
 
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 
 ]
 
@@ -197,3 +231,5 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+import warnings
+warnings.filterwarnings('ignore', category=UserWarning, module='dj_rest_auth.registration.serializers')

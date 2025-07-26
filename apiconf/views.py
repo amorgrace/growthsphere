@@ -1,7 +1,7 @@
 from rest_framework import generics
 from rest_framework.generics import RetrieveAPIView, ListAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from .serializers import RegisterSerializers, FinancesSerializers, KYCSerializer
+from .serializers import FinancesSerializers, KYCSerializer, CustomRegisterSerializer
 from .models import Finances, RecentTransaction, KYC
 from rest_framework.response import Response
 from dj_rest_auth.views import LoginView as DjRestLoginView, APIView
@@ -11,11 +11,22 @@ from drf_yasg.utils import swagger_auto_schema
 from dj_rest_auth.utils import jwt_encode
 from .serializers import CustomUserDetailsSerializer, RecentTransactionSerializer, ChangePasswordSerializer
 from rest_framework.parsers import MultiPartParser, FormParser
+from dj_rest_auth.registration.views import RegisterView
+from rest_framework_simplejwt.tokens import RefreshToken
 
-class RegisterView(generics.CreateAPIView):
-    serializer_class = RegisterSerializers
-    permission_classes = [AllowAny]
+# class RegisterView(generics.CreateAPIView):
+#     serializer_class = RegisterSerializers
+#     permission_classes = [AllowAny]
 
+class CustomRegisterView(RegisterView):
+    serializer_class = CustomRegisterSerializer
+
+    def get_response_data(self, user):
+        refresh = RefreshToken.for_user(user)
+        return {
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        }
 
 class CustomLoginView(DjRestLoginView):
     permission_classes = [AllowAny]
